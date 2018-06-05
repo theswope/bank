@@ -1,0 +1,22 @@
+# This is the default configuration for a bank if no environment 
+# variables have been declared to set other options
+broker: "127.0.0.1"
+port: "5672"
+user: user
+pass: "user"
+virthost: "/"
+
+name: bank
+
+requestTopic: requestBank
+responseTopic: responseBank
+autorespond: false
+
+minTerm: 6
+maxTerm: 12
+
+minAmount: 100.0
+maxAmount: 10000.0
+
+minConsumerRate: a
+maxConsumerRate: f
