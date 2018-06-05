@@ -15,8 +15,8 @@ autorespond: false
 minTerm: 6
 maxTerm: 12
 
-minAmount: 100.0
-maxAmount: 10000.0
+minAmount: 100
+maxAmount: 10000
 
 minConsumerRate: a
 maxConsumerRate: f

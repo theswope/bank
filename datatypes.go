@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/spf13/viper"
 )
@@ -9,9 +9,9 @@ import (
 // {"requestDeadline": 0, "amount": 10000, "term": 5, "requestId": "28a4f6b7-a0d4-4cb6-84dd-592c0b50a61d", "consumerRate": 6885}
 
 type request struct {
-	RequestDeadline uint   `json:"requestDeadline,omitempty"`
-	Amount          uint   `json:"amount,omitempty"`
-	Term            uint   `json:"term,omitempty"`
+	RequestDeadline int    `json:"requestDeadline,omitempty"`
+	Amount          int    `json:"amount,omitempty"`
+	Term            int    `json:"term,omitempty"`
 	RequestID       string `json:"requestId,omitempty"`
 	ConsumerRate    string `json:"consumerRate,omitempty"`
 }
@@ -24,14 +24,14 @@ type response struct {
 
 func (r *request) processRequest() *response {
 	if !r.isValidRequest() {
-		fmt.Printf("Invalid request: %v", r)
+		log.Printf("Invalid request: %v", r)
 
 		return nil
 	}
 
 	quoteRate := getRandomQuoteRate()
 
-	fmt.Printf("New quote rate: %f", quoteRate)
+	log.Printf("New quote rate: %f\n", quoteRate)
 
 	return &response{
 		BankName:  viper.Get("name").(string),
@@ -49,20 +49,20 @@ func (r *request) isValidRequest() bool {
 	return validTerm && validAmount && validConsumerRate
 }
 
-func isValidTerm(term uint) bool {
+func isValidTerm(term int) bool {
 	minCorrect := false
 	maxCorrect := false
 
 	minTerm := viper.Get("minTerm")
 	if minTerm != 0 {
-		minCorrect = term >= minTerm.(uint)
+		minCorrect = term >= minTerm.(int)
 	} else {
 		minCorrect = true
 	}
 
 	maxTerm := viper.Get("maxTerm")
 	if maxTerm != 0 {
-		maxCorrect = term <= maxTerm.(uint)
+		maxCorrect = term <= maxTerm.(int)
 	} else {
 		maxCorrect = true
 	}
@@ -70,18 +70,18 @@ func isValidTerm(term uint) bool {
 	return minCorrect && maxCorrect
 }
 
-func isValidAmount(amount uint) bool {
+func isValidAmount(amount int) bool {
 	minCorrect := false
 	maxCorrect := false
 
-	minAmount := viper.Get("minAmount").(uint)
+	minAmount := viper.Get("minAmount").(int)
 	if minAmount != 0 {
 		minCorrect = amount >= minAmount
 	} else {
 		minCorrect = true
 	}
 
-	maxAmount := viper.Get("maxAmount").(uint)
+	maxAmount := viper.Get("maxAmount").(int)
 	if maxAmount != 0 {
 		maxCorrect = amount <= maxAmount
 	} else {

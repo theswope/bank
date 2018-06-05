@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"math"
 	"math/rand"
@@ -41,7 +40,7 @@ func (a *amqpConnection) connectToBroker() {
 	failOnError(err, "Failed to connect to RabbitMQ")
 	a.conn = conn
 
-	fmt.Printf("Connected to broker: %s\n", uri)
+	log.Printf("Connected to broker: %s\n", uri)
 	// defer conn.Close()
 }
 
@@ -50,7 +49,7 @@ func (a *amqpConnection) connectToChannel() {
 	failOnError(err, "Failed to open a channel")
 	a.ch = ch
 
-	fmt.Println("Connected to channel")
+	log.Println("Connected to channel")
 	// defer ch.Close()
 }
 
@@ -65,20 +64,20 @@ func (a *amqpConnection) declareQueue(queueName string) {
 	)
 	failOnError(err, "Failed to declare a queue")
 	a.q = q
-	fmt.Printf("Connected to queue %s\n", queueName)
+	log.Printf("Connected to queue %s\n", queueName)
 }
 
-func (a *amqpConnection) publishToQueue(exchange string, body []byte) {
+func (a *amqpConnection) publishToQueue(exchange, queue string, body []byte) {
 	err := a.ch.Publish(
 		exchange, // exchange
-		a.q.Name, // routing key
+		queue,    // routing key
 		false,    // mandatory
 		false,    // immediate
 		amqp.Publishing{
 			ContentType: "text/plain",
 			Body:        body,
 		})
-	log.Printf(" [x] Sent %s", body)
+	log.Printf("Sent: %s", body)
 	failOnError(err, "Failed to publish a message")
 }
 
@@ -98,26 +97,34 @@ func (a *amqpConnection) consumeFromQueue() {
 
 	go func() {
 		for d := range msgs {
-			log.Printf("Received a message: %s", d.Body)
+			log.Printf("Received: %s", d.Body)
 
 			req := &request{}
-			err := json.Unmarshal(d.Body, *req)
+			err := json.Unmarshal(d.Body, req)
 			if err != nil {
-				return
+				log.Printf("Error during unmarshal: %s", err)
+				continue
 			}
+
+			log.Printf("Unmarshalled message: %v", req)
 
 			rsp := req.processRequest()
 
-			body, err := json.Marshal(rsp)
-			if err != nil {
-				return
+			if rsp == nil {
+				continue
 			}
 
-			a.publishToQueue("", body)
+			body, err := json.Marshal(rsp)
+			if err != nil {
+				log.Printf("Error during marshal: %s", err)
+				continue
+			}
+
+			a.publishToQueue("", viper.Get("responseTopic").(string), body)
 		}
 	}()
 
-	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
+	log.Printf("Waiting for messages. To exit press CTRL+C")
 	<-forever
 }
 
