@@ -1,3 +1,5 @@
+docker-env-vars.md
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
