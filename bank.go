@@ -58,11 +58,11 @@ func main() {
 
 	// Declare a queue
 	queueReq := viper.Get("requestTopic").(string)
-	aCon.declareQueue(queueReq)
+	aCon.declareSubQueue(queueReq)
 
 	// Declare a queue
 	queueRes := viper.Get("responseTopic").(string)
-	aCon.declareQueue(queueRes)
+	aCon.declarePubQueue(queueRes)
 
 	// Consume messages from queue
 	aCon.consumeFromQueue()
