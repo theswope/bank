@@ -40,6 +40,8 @@ func main() {
 	viper.BindEnv("minConsumerRate")
 	viper.BindEnv("maxConsumerRate")
 
+	// envTest()
+
 	// Responde to rulebase with current settings
 	if !updateRulebase() {
 		log.Printf("Error: Couldn't update rulebase")
@@ -67,12 +69,12 @@ func updateRulebase() bool {
 	jsonObj := &rulebase{
 		BankID:          viper.Get("name").(string),
 		Topic:           viper.Get("requestTopic").(string),
-		MinTerm:         viper.Get("minTerm").(int),
-		MaxTerm:         viper.Get("maxTerm").(int),
-		MinAmount:       viper.Get("minAmount").(int),
-		MaxAmount:       viper.Get("maxAmount").(int),
-		MinConsumerRate: viper.Get("minConsumerRate").(int),
-		MaxConsumerRate: viper.Get("maxConsumerRate").(int),
+		MinTerm:         viper.Get("minTerm").(string),
+		MaxTerm:         viper.Get("maxTerm").(string),
+		MinAmount:       viper.Get("minAmount").(string),
+		MaxAmount:       viper.Get("maxAmount").(string),
+		MinConsumerRate: viper.Get("minConsumerRate").(string),
+		MaxConsumerRate: viper.Get("maxConsumerRate").(string),
 	}
 
 	jsonStr, err := json.Marshal(jsonObj)
@@ -107,10 +109,29 @@ func updateRulebase() bool {
 type rulebase struct {
 	BankID          string `json:"bankId,omitempty"`
 	Topic           string `json:"topic,omitempty"`
-	MinTerm         int    `json:"minTerm,omitempty"`
-	MaxTerm         int    `json:"maxTerm,omitempty"`
-	MinAmount       int    `json:"minAmount,omitempty"`
-	MaxAmount       int    `json:"maxAmount,omitempty"`
-	MinConsumerRate int    `json:"minConsumerRate,omitempty"`
-	MaxConsumerRate int    `json:"maxConsumerRate,omitempty"`
+	MinTerm         string `json:"minTerm,omitempty"`
+	MaxTerm         string `json:"maxTerm,omitempty"`
+	MinAmount       string `json:"minAmount,omitempty"`
+	MaxAmount       string `json:"maxAmount,omitempty"`
+	MinConsumerRate string `json:"minConsumerRate,omitempty"`
+	MaxConsumerRate string `json:"maxConsumerRate,omitempty"`
+}
+
+func envTest() {
+	fmt.Println(viper.Get("broker").(string))
+	fmt.Println(viper.Get("port").(string))
+	fmt.Println(viper.Get("user").(string))
+	fmt.Println(viper.Get("pass").(string))
+	fmt.Println(viper.Get("virthost").(string))
+	fmt.Println(viper.Get("rulebaseurl").(string))
+	fmt.Println(viper.Get("name").(string))
+	fmt.Println(viper.Get("requestTopic").(string))
+	fmt.Println(viper.Get("responseTopic").(string))
+	fmt.Println(viper.Get("autorespond").(bool))
+	fmt.Println(viper.Get("minTerm").(string))
+	fmt.Println(viper.Get("maxTerm").(string))
+	fmt.Println(viper.Get("minAmount").(string))
+	fmt.Println(viper.Get("maxAmount").(string))
+	fmt.Println(viper.Get("minConsumerRate").(string))
+	fmt.Println(viper.Get("maxConsumerRate").(string))
 }
