@@ -13,7 +13,7 @@ type request struct {
 	Amount          int    `json:"amount,omitempty"`
 	Term            int    `json:"term,omitempty"`
 	RequestID       string `json:"requestId,omitempty"`
-	ConsumerRate    string `json:"consumerRate,omitempty"`
+	ConsumerRate    int    `json:"consumerRate,omitempty"`
 }
 
 type response struct {
@@ -45,6 +45,16 @@ func (r *request) isValidRequest() bool {
 	validTerm := isValidTerm(r.Term)
 	validAmount := isValidAmount(r.Amount)
 	validConsumerRate := isValidConsumerRate(r.ConsumerRate)
+
+	if !validTerm {
+		log.Printf("Invalid term")
+	}
+	if !validAmount {
+		log.Printf("Invalid amount")
+	}
+	if !validConsumerRate {
+		log.Printf("Invalid consumer rate")
+	}
 
 	return validTerm && validAmount && validConsumerRate
 }
@@ -91,19 +101,19 @@ func isValidAmount(amount int) bool {
 	return minCorrect && maxCorrect
 }
 
-func isValidConsumerRate(consumerRate string) bool {
+func isValidConsumerRate(consumerRate int) bool {
 	minCorrect := false
 	maxCorrect := false
 
-	minConsumerRate := viper.Get("minConsumerRate").(string)
-	if minConsumerRate != "" {
+	minConsumerRate := viper.Get("minConsumerRate").(int)
+	if minConsumerRate != 0 {
 		minCorrect = consumerRate >= minConsumerRate
 	} else {
 		minCorrect = true
 	}
 
-	maxConsumerRate := viper.Get("maxConsumerRate").(string)
-	if maxConsumerRate != "" {
+	maxConsumerRate := viper.Get("maxConsumerRate").(int)
+	if maxConsumerRate != 0 {
 		maxCorrect = consumerRate <= maxConsumerRate
 	} else {
 		maxCorrect = true

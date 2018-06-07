@@ -18,5 +18,5 @@ maxTerm: 12
 minAmount: 100
 maxAmount: 10000
 
-minConsumerRate: a
-maxConsumerRate: f
+minConsumerRate: 6666
+maxConsumerRate: 9999
