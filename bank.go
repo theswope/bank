@@ -57,8 +57,12 @@ func main() {
 	aCon.connectToChannel()
 
 	// Declare a queue
-	queue := viper.Get("requestTopic").(string)
-	aCon.declareQueue(queue)
+	queueReq := viper.Get("requestTopic").(string)
+	aCon.declareQueue(queueReq)
+
+	// Declare a queue
+	queueRes := viper.Get("responseTopic").(string)
+	aCon.declareQueue(queueRes)
 
 	// Consume messages from queue
 	aCon.consumeFromQueue()

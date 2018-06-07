@@ -120,7 +120,7 @@ func (a *amqpConnection) consumeFromQueue() {
 				continue
 			}
 
-			a.publishToQueue(viper.Get("exchange").(string), viper.Get("responseTopic").(string), body)
+			a.publishToQueue("", viper.Get("responseTopic").(string), body)
 		}
 	}()
 
