@@ -24,6 +24,7 @@ func main() {
 	// Environment variable setup
 	viper.SetEnvPrefix("bank")
 	viper.BindEnv("broker")
+	viper.BindEnv("exchange")
 	viper.BindEnv("port")
 	viper.BindEnv("user")
 	viper.BindEnv("pass")
