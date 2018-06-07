@@ -13,7 +13,8 @@ import (
 type amqpConnection struct {
 	conn *amqp.Connection
 	ch   *amqp.Channel
-	q    amqp.Queue
+	sq   amqp.Queue
+	pq   amqp.Queue
 }
 
 func failOnError(err error, msg string) {
@@ -53,7 +54,7 @@ func (a *amqpConnection) connectToChannel() {
 	// defer ch.Close()
 }
 
-func (a *amqpConnection) declareQueue(queueName string) {
+func (a *amqpConnection) declareSubQueue(queueName string) {
 	q, err := a.ch.QueueDeclare(
 		queueName, // name
 		true,      // durable
@@ -63,7 +64,21 @@ func (a *amqpConnection) declareQueue(queueName string) {
 		nil,       // arguments
 	)
 	failOnError(err, "Failed to declare a queue")
-	a.q = q
+	a.sq = q
+	log.Printf("Connected to queue %s\n", queueName)
+}
+
+func (a *amqpConnection) declarePubQueue(queueName string) {
+	q, err := a.ch.QueueDeclare(
+		queueName, // name
+		true,      // durable
+		false,     // delete when unused
+		false,     // exclusive
+		false,     // no-wait
+		nil,       // arguments
+	)
+	failOnError(err, "Failed to declare a queue")
+	a.pq = q
 	log.Printf("Connected to queue %s\n", queueName)
 }
 
@@ -83,13 +98,13 @@ func (a *amqpConnection) publishToQueue(exchange, queue string, body []byte) {
 
 func (a *amqpConnection) consumeFromQueue() {
 	msgs, err := a.ch.Consume(
-		a.q.Name, // queue
-		"",       // consumer
-		true,     // auto-ack
-		false,    // exclusive
-		false,    // no-local
-		false,    // no-wait
-		nil,      // args
+		a.sq.Name, // queue
+		"",        // consumer
+		true,      // auto-ack
+		false,     // exclusive
+		false,     // no-local
+		false,     // no-wait
+		nil,       // args
 	)
 	failOnError(err, "Failed to register a consumer")
 
