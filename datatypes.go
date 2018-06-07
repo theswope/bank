@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strconv"
 
 	"github.com/spf13/viper"
 )
@@ -63,16 +64,26 @@ func isValidTerm(term int) bool {
 	minCorrect := false
 	maxCorrect := false
 
-	minTerm := viper.Get("minTerm")
-	if minTerm != 0 {
-		minCorrect = term >= minTerm.(int)
+	minTerm := viper.Get("minTerm").(string)
+	minT, err := strconv.Atoi(minTerm)
+	if err != nil {
+		return false
+	}
+
+	if minT != 0 {
+		minCorrect = term >= minT
 	} else {
 		minCorrect = true
 	}
 
-	maxTerm := viper.Get("maxTerm")
-	if maxTerm != 0 {
-		maxCorrect = term <= maxTerm.(int)
+	maxTerm := viper.Get("maxTerm").(string)
+	maxT, err := strconv.Atoi(maxTerm)
+	if err != nil {
+		return false
+	}
+
+	if maxT != 0 {
+		maxCorrect = term <= maxT
 	} else {
 		maxCorrect = true
 	}
@@ -84,16 +95,26 @@ func isValidAmount(amount int) bool {
 	minCorrect := false
 	maxCorrect := false
 
-	minAmount := viper.Get("minAmount").(int)
-	if minAmount != 0 {
-		minCorrect = amount >= minAmount
+	minAmount := viper.Get("minAmount").(string)
+	minA, err := strconv.Atoi(minAmount)
+	if err != nil {
+		return false
+	}
+
+	if minA != 0 {
+		minCorrect = amount >= minA
 	} else {
 		minCorrect = true
 	}
 
-	maxAmount := viper.Get("maxAmount").(int)
-	if maxAmount != 0 {
-		maxCorrect = amount <= maxAmount
+	maxAmount := viper.Get("maxAmount").(string)
+	maxA, err := strconv.Atoi(maxAmount)
+	if err != nil {
+		return false
+	}
+
+	if maxA != 0 {
+		maxCorrect = amount <= maxA
 	} else {
 		maxCorrect = true
 	}
@@ -105,16 +126,26 @@ func isValidConsumerRate(consumerRate int) bool {
 	minCorrect := false
 	maxCorrect := false
 
-	minConsumerRate := viper.Get("minConsumerRate").(int)
-	if minConsumerRate != 0 {
-		minCorrect = consumerRate >= minConsumerRate
+	minConsumerRate := viper.Get("minConsumerRate").(string)
+	minCR, err := strconv.Atoi(minConsumerRate)
+	if err != nil {
+		return false
+	}
+
+	if minCR != 0 {
+		minCorrect = consumerRate >= minCR
 	} else {
 		minCorrect = true
 	}
 
-	maxConsumerRate := viper.Get("maxConsumerRate").(int)
-	if maxConsumerRate != 0 {
-		maxCorrect = consumerRate <= maxConsumerRate
+	maxConsumerRate := viper.Get("maxConsumerRate").(string)
+	maxCR, err := strconv.Atoi(maxConsumerRate)
+	if err != nil {
+		return false
+	}
+
+	if maxCR != 0 {
+		maxCorrect = consumerRate <= maxCR
 	} else {
 		maxCorrect = true
 	}
