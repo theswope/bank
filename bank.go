@@ -31,6 +31,7 @@ func main() {
 	viper.BindEnv("virthost")
 	viper.BindEnv("rulebaseurl")
 	viper.BindEnv("name")
+	viper.BindEnv("autoRespond")
 	viper.BindEnv("requestTopic")
 	viper.BindEnv("responseTopic")
 	viper.BindEnv("autorespond")

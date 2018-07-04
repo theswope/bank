@@ -110,6 +110,8 @@ func (a *amqpConnection) consumeFromQueue() {
 
 	forever := make(chan bool)
 
+	autoRespond := viper.GetBool("autoRespond")
+
 	go func() {
 		for d := range msgs {
 			log.Printf("Received: %s", d.Body)
@@ -122,6 +124,11 @@ func (a *amqpConnection) consumeFromQueue() {
 			}
 
 			log.Printf("Unmarshalled message: %v", req)
+
+			if !autoRespond {
+				log.Print("AutoRespond set to false, won't respond to message")
+				continue
+			}
 
 			rsp := req.processRequest()
 

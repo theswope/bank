@@ -10,7 +10,7 @@ name: bank
 
 requestTopic: requestBank
 responseTopic: responseBank
-autorespond: false
+autorespond: true
 
 minTerm: 6
 maxTerm: 12
