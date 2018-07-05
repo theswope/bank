@@ -5,6 +5,7 @@ import (
 	"log"
 	"math"
 	"math/rand"
+	"time"
 
 	"github.com/spf13/viper"
 	"github.com/streadway/amqp"
@@ -111,6 +112,7 @@ func (a *amqpConnection) consumeFromQueue() {
 	forever := make(chan bool)
 
 	autoRespond := viper.GetBool("autoRespond")
+	respondSleep := viper.GetInt("respondSleep")
 
 	go func() {
 		for d := range msgs {
@@ -125,9 +127,12 @@ func (a *amqpConnection) consumeFromQueue() {
 
 			log.Printf("Unmarshalled message: %v", req)
 
-			if !autoRespond {
+			if !autoRespond && respondSleep == 0 {
 				log.Print("AutoRespond set to false, won't respond to message")
 				continue
+			} else {
+				log.Printf("AutoRespond set to false, but a sleep value is set, waiting for %d seconds", respondSleep)
+				time.Sleep(time.Second * time.Duration(respondSleep))
 			}
 
 			rsp := req.processRequest()

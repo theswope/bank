@@ -11,6 +11,7 @@ name: bank
 requestTopic: requestBank
 responseTopic: responseBank
 autorespond: true
+respondSleep: 60
 
 minTerm: 6
 maxTerm: 12
